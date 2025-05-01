@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Life Simulator</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --gradient-bg: linear-gradient(135deg, #2e1065 0%, #4c1d95 50%, #2e1065 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            --glass-radius: 16px;
+            --primary-gradient: linear-gradient(135deg, #f87171 0%, #818cf8 100%);
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--gradient-bg);
+            background-attachment: fixed;
+            min-height: 100vh;
+            margin: 0;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .glass-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: var(--glass-radius);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            padding: 2rem;
+            width: 90%;
+            max-width: 560px;
+            min-height: 480px;
+            margin: 2rem 0;
+        }
+        
+        .gradient-btn {
+            background: var(--primary-gradient);
+            border-radius: 50px;
+            border: none;
+            padding: 0.75rem 1rem;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+            text-align: center;
+        }
+        
+        .gradient-btn:hover {
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .glass-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            color: white;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        
+        .glass-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .glass-input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .glass-select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            color: white;
+            width: 100%;
+            margin-bottom: 1rem;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+        }
+        
+        .glass-select:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .glass-select option {
+            background-color: #2e1065;
+            color: white;
+        }
+        
+        .tab {
+            padding: 0.75rem;
+            cursor: pointer;
+            text-align: center;
+            flex: 1;
+            opacity: 0.7;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            opacity: 1;
+            border-bottom: 2px solid white;
+        }
+        
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        .avatar {
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border: 2px solid var(--glass-border);
+        }
+        
+        .activity-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .activity-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.15);
+            font-weight: 500;
+        }
+        
+        .digit-input {
+            width: 3rem;
+            height: 3rem;
+            text-align: center;
+            font-size: 1.5rem;
+            margin: 0 0.25rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+        }
+        
+        .digit-input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+        }
+        
+        .progress-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-gradient);
+            transition: width 0.5s ease;
+            border-radius: 3px;
+        }
+        
+        @media (max-width: 640px) {
+            .glass-container {
+                padding: 1.5rem;
+                width: 95%;
+                margin: 1rem 0;
+            }
+        }
+
+        /* Hide mobile nav by default */
+        .mobile-nav {
+            display: none;
+        }
+        
+        /* Show mobile nav on small screens */
+        @media (max-width: 640px) {
+            .mobile-nav {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: rgba(30, 10, 60, 0.8);
+                backdrop-filter: blur(10px);
+                z-index: 100;
+                justify-content: space-around;
+                padding: 0.5rem;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            .nav-icon {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 0.5rem;
+                font-size: 0.75rem;
+            }
+            
+            .nav-icon i {
+                font-size: 1.25rem;
+                margin-bottom: 0.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="glass-container">
+        <!-- AUTH PAGE -->
+        <div class="page active" id="auth-page">
+            <h1 class="text-2xl font-bold text-center mb-6">Love Life Sim</h1>
+            
+            <div class="flex mb-6">
+                <div class="tab active" id="login-tab" onclick="switchTab('login')">Login</div>
+                <div class="tab" id="signup-tab" onclick="switchTab('signup')">Sign Up</div>
+            </div>
+            
+            <div id="login-form" class="form-content">
+                <div class="mb-4">
+                    <label class="block mb-2">Email</label>
+                    <input type="email" id="login-email" class="glass-input" placeholder="Your email">
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block mb-2">Password</label>
+                    <input type="password" id="login-password" class="glass-input" placeholder="Your password">
+                </div>
+                
+                <button class="gradient-btn w-full" onclick="handleLogin()">Login</button>
+                
+                <p class="text-center mt-4 text-sm opacity-70">Demo: user@example.com / password123</p>
+            </div>
+            
+            <div id="signup-form" class="form-content hidden">
+                <div class="mb-4">
+                    <label class="block mb-2">Full Name</label>
+                    <input type="text" id="signup-name" class="glass-input" placeholder="Your full name">
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block mb-2">Email</label>
+                    <input type="email" id="signup-email" class="glass-input" placeholder="Your email">
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block mb-2">Password</label>
+                    <input type="password" id="signup-password" class="glass-input" placeholder="Choose a password">
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block mb-2">Confirm Password</label>
+                    <input type="password" id="signup-confirm" class="glass-input" placeholder="Confirm password">
+                </div>
+                
+                <button class="gradient-btn w-full" onclick="handleSignup()">Sign Up</button>
+            </div>
+        </div>
+        
+        <!-- PROFILE SETUP PAGE -->
+        <div class="page" id="profile-setup-page">
+            <h1 class="text-2xl font-bold text-center mb-6">Profile Setup</h1>
+            <p class="text-center mb-6">Let's set up your profile to personalize your experience</p>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 0%"></div>
+            </div>
+            
+            <div class="profile-question active" data-index="0">
+                <label class="block mb-2">Name</label>
+                <input type="text" id="profile-name" class="glass-input" placeholder="Your name">
+                <div class="flex justify-between mt-4">
+                    <div></div> <!-- Empty div for alignment -->
+                    <button class="gradient-btn" onclick="nextProfileQuestion(0)">Next</button>
+                </div>
+            </div>
+            
+            <div class="profile-question hidden" data-index="1">
+                <label class="block mb-2">Age Range</label>
+                <select id="profile-age" class="glass-select">
+                    <option value="" disabled selected>Select your age range</option>
+                    <option value="18-25">18-25 years</option>
+                    <option value="26-35">26-35 years</option>
+                    <option value="36-45">36-45 years</option>
+                    <option value="46-55">46-55 years</option>
+                    <option value="56+">56+ years</option>
+                </select>
+                <div class="flex justify-between mt-4">
+                    <button class="gradient-btn bg-opacity-50" onclick="prevProfileQuestion(1)">Back</button>
+                    <button class="gradient-btn" onclick="nextProfileQuestion(1)">Next</button>
+                </div>
+            </div>
+            
+            <div class="profile-question hidden" data-index="2">
+                <label class="block mb-2">Personality</label>
+                <select id="profile-personality" class="glass-select">
+                    <option value="" disabled selected>Select your personality type</option>
+                    <option value="introvert">Introvert</option>
+                    <option value="extrovert">Extrovert</option>
+                    <option value="ambivert">Ambivert</option>
+                </select>
+                <div class="flex justify-between mt-4">
+                    <button class="gradient-btn bg-opacity-50" onclick="prevProfileQuestion(2)">Back</button>
+                    <button class="gradient-btn" onclick="nextProfileQuestion(2)">Next</button>
+                </div>
+            </div>
+            
+            <div class="profile-question hidden" data-index="3">
+                <label class="block mb-2">Travel Preference</label>
+                <select id="profile-travel" class="glass-select">
+                    <option value="" disabled selected>Select your travel preference</option>
+                    <option value="adventure">Adventure Seeker</option>
+                    <option value="relaxation">Relaxation Focused</option>
+                    <option value="cultural">Cultural Explorer</option>
+                    <option value="staycation">Homebody/Staycation</option>
+                </select>
+                <div class="flex justify-between mt-4">
+                    <button class="gradient-btn bg-opacity-50" onclick="prevProfileQuestion(3)">Back</button>
+                    <button class="gradient-btn" onclick="nextProfileQuestion(3)">Next</button>
+                </div>
+            </div>
+            
+            <div class="profile-question hidden" data-index="4">
+                <label class="block mb-2">Decision Making</label>
+                <select id="profile-decision" class="glass-select">
+                    <option value="" disabled selected>How do you make decisions?</option>
+                    <option value="logical">Logical/Analytical</option>
+                    <option value="emotional">Emotional/Intuitive</option>
+                    <option value="collaborative">Collaborative</option>
+                    <option value="spontaneous">Spontaneous</option>
+                </select>
+                <div class="flex justify-between mt-4">
+                    <button class="gradient-btn bg-opacity-50" onclick="prevProfileQuestion(4)">Back</button>
+                    <button class="gradient-btn" onclick="nextProfileQuestion(4)">Next</button>
+                </div>
+            </div>
+            
+            <div class="profile-question hidden" data-index="5">
+                <label class="block mb-2">Leisure Preference</label>
+                <select id="profile-leisure" class="glass-select">
+                    <option value="" disabled selected>What do you enjoy in free time?</option>
+                    <option value="outdoor">Outdoor Activities</option>
+                    <option value="indoor">Indoor Activities</option>
+                    <option value="social">Social Gatherings</option>
+                    <option value="creative">Creative Pursuits</option>
+                </select>
+                <div class="flex justify-between mt-4">
+                    <button class="gradient-btn bg-opacity-50" onclick="prevProfileQuestion(5)">Back</button>
+                    <button class="gradient-btn" onclick="completeProfileSetup()">Complete</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- PARTNER LINK PAGE -->
+        <div class="page" id="partner-link-page">
+            <h1 class="text-2xl font-bold text-center mb-4">Link with Partner</h1>
+            <p class="text-center mb-6">Connect with your partner to share your journey together</p>
+            
+            <div class="flex justify-center mb-6">
+                <button class="gradient-btn mx-2" onclick="showGenerateCode()">Generate Code</button>
+                <button class="gradient-btn mx-2" onclick="showEnterCode()">Enter Code</button>
+            </div>
+            
+            <div id="generate-code-section" class="hidden">
+                <p class="text-center mb-4">Share this code with your partner</p>
+                <div class="bg-white bg-opacity-10 rounded-lg p-4 mb-6 text-center">
+                    <h2 id="connection-code" class="text-3xl font-bold tracking-wider"></h2>
+                </div>
+                <p class="text-sm text-center opacity-70">This code will expire in 10 minutes</p>
+                
+                <div id="waiting-partner" class="mt-6 text-center hidden">
+                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white mb-2"></div>
+                    <p>Waiting for partner to connect...</p>
+                </div>
+                
+                <div id="partner-found" class="mt-6 text-center hidden">
+                    <h3 class="text-xl mb-2">Partner Found:</h3>
+                    <p id="partner-name" class="mb-4"></p>
+                    <button class="gradient-btn" onclick="connectPartner()">Connect</button>
+                </div>
+            </div>
+            
+            <div id="enter-code-section" class="hidden">
+                <p class="text-center mb-4">Enter the 6-digit code from your partner</p>
+                <div class="flex justify-center mb-6">
+                    <input type="text" maxlength="1" class="digit-input" data-index="0">
+                    <input type="text" maxlength="1" class="digit-input" data-index="1">
+                    <input type="text" maxlength="1" class="digit-input" data-index="2">
+                    <input type="text" maxlength="1" class="digit-input" data-index="3">
+                    <input type="text" maxlength="1" class="digit-input" data-index="4">
+                    <input type="text" maxlength="1" class="digit-input" data-index="5">
+                </div>
+                
+                <div class="text-center">
+                    <button class="gradient-btn" onclick="validateCode()">Validate</button>
+                </div>
+                
+                <div id="validation-waiting" class="mt-6 text-center hidden">
+                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white mb-2"></div>
+                    <p>Validating code...</p>
+                </div>
+                
+                <div id="validation-success" class="mt-6 text-center hidden">
+                    <i class="fas fa-check-circle text-green-400 text-2xl mb-2"></i>
+                    <h3 class="text-xl mb-2">Partner Found:</h3>
+                    <p id="found-partner-name" class="mb-4"></p>
+                    <button class="gradient-btn" onclick="connectPartner()">Connect</button>
+                </div>
+                
+                <div id="validation-error" class="mt-6 text-center hidden">
+                    <i class="fas fa-exclamation-circle text-red-400 text-2xl mb-2"></i>
+                    <p class="mb-4">Invalid or expired code. Please try again.</p>
+                    <button class="gradient-btn" onclick="showEnterCode()">Try Again</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- QUESTIONNAIRE PAGE -->
+        <div class="page" id="questionnaire-page">
+            <h1 class="text-2xl font-bold text-center mb-4">Relationship Questionnaire</h1>
+            <p class="text-center mb-6">Answer these questions to help us understand your relationship better</p>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="questionnaire-progress" style="width: 0%"></div>
+            </div>
+            
+            <div id="question-container">
+                <!-- Questions will be inserted here dynamically -->
+                <div class="question-card active" data-index="0">
+                    <h3 class="text-lg font-medium mb-2">Question 1 - Communication</h3>
+                    <p class="mb-4" id="question-text-0">Loading question...</p>
+                    
+                    <div class="options-container">
+                        <div class="mb-3">
+                            <label class="flex items-start">
+                                <input type="radio" name="q0" value="0" class="mt-1 mr-2">
+                                <span id="option-0-0">Loading...</span>
+                            </label>
+                        </div>
+                        <div class="mb-3">
+                            <label class="flex items-start">
+                                <input type="radio" name="q0" value="1" class="mt-1 mr-2">
+                                <span id="option-0-1">Loading...</span>
+                            </label>
+                        </div>
+                        <div class="mb-3">
+                            <label class="flex items-start">
+                                <input type="radio" name="q0" value="2" class="mt-1 mr-2">
+                                <span id="option-0-2">Loading...</span>
+                            </label>
+                        </div>
+                        <div class="mb-3">
+                            <label class="flex items-start">
+                                <input type="radio" name="q0" value="3" class="mt-1 mr-2">
+                                <span id="option-0-3">Loading...</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between mt-6">
+                        <div></div> <!-- Empty div for alignment -->
+                        <button class="gradient-btn" onclick="nextQuestion(0)">Next</button>
+                    </div>
+                </div>
+                
+                <!-- Template for other questions -->
+                <!-- These will be created dynamically in JavaScript -->
+            </div>
+        </div>
+        
+        <!-- COMPLETION PAGE -->
+        <div class="page" id="completion-page">
+            <div class="text-center">
+                <i class="fas fa-check-circle text-green-400 text-5xl mb-4"></i>
+                <h1 class="text-2xl font-bold mb-4">Assessment Complete!</h1>
+                <p class="mb-6">Check your email in a few minutes for recommendations. Please visit again!</p>
+                <button class="gradient-btn" onclick="goToHomePage()">Continue to App</button>
+            </div>
+        </div>
+        
+        <!-- HOME PAGE -->
+        <div class="page" id="home-page">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold">Love Life Sim</h1>
+                <div class="flex">
+                    <button class="p-2 rounded-full hover:bg-white hover:bg-opacity-10" onclick="showProfilePage()">
+                        <i class="fas fa-user"></i>
+                    </button>
+                    <button class="p-2 rounded-full hover:bg-white hover:bg-opacity-10 ml-2" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <h2 class="text-xl font-semibold mb-4">Explore Activities</h2>
+            <p class="mb-4 text-sm opacity-80">Swipe left/right on activity cards, filter with search, and add favorites to your journey!</p>
+            
+            <div class="mb-4">
+                <input type="text" class="glass-input" placeholder="Search activities..." id="activity-search">
+            </div>
+            
+            <div id="activities-container">
+                <!-- Activity cards will be populated here -->
+                
+                <div class="activity-card">
+                    <h3 class="text-lg font-medium mb-2">The Newlywed Game</h3>
+                    <p class="text-sm mb-3 opacity-80">Test how well you know each other with this classic game of questions and answers.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs bg-purple-500 bg-opacity-30 px-2 py-1 rounded-full">30 minutes</span>
+                        <div class="flex">
+                            <button class="p-2 text-red-400 hover:text-red-300" onclick="dislikeActivity('newlywed')">
+                                <i class="fas fa-times-circle"></i>
+                            </button>
+                            <button class="p-2 text-green-400 hover:text-green-300" onclick="likeActivity('newlywed')">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                            <button class="p-2 text-yellow-400 hover:text-yellow-300" onclick="saveActivity('newlywed')">
+                                <i class="fas fa-bookmark"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="activity-card">
+                    <h3 class="text-lg font-medium mb-2">Weekly Appreciation Circle</h3>
+                    <p class="text-sm mb-3 opacity-80">Take turns sharing three things you appreciate about each other this week.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs bg-blue-500 bg-opacity-30 px-2 py-1 rounded-full">15 minutes</span>
+                        <div class="flex">
+                            <button class="p-2 text-red-400 hover:text-red-300" onclick="dislikeActivity('appreciation')">
+                                <i class="fas fa-times-circle"></i>
+                            </button>
+                            <button class="p-2 text-green-400 hover:text-green-300" onclick="likeActivity('appreciation')">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                            <button class="p-2 text-yellow-400 hover:text-yellow-300" onclick="saveActivity('appreciation')">
+                                <i class="fas fa-bookmark"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- More activity cards would be here -->
+            </div>
+        </div>
+        
+        <!-- DASHBOARD PAGE -->
+        <div class="page" id="dashboard-page">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold">Relationship Dashboard</h1>
+                <button class="p-2 rounded-full hover:bg-white hover:bg-opacity-10" onclick="showProfilePage()">
+                    <i class="fas fa-user"></i>
+                </button>
+            </div>
+            
+            <h2 class="text-xl font-semibold mb-4">Relationship Verticals</h2>
+            
+            <div class="flex justify-center mb-6">
+                <div style="max-width: 300px; max-height: 300px;">
+                    <canvas id="relationshipChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="mb-6">
+                <h3 class="text-lg font-medium mb-3">Recent Feedback</h3>
+                <div class="activity-card">
+                    <h4 class="font-medium mb-1">The Newlywed Game</h4>
+                    <p class="text-sm italic">"We had so much fun! Learning new things about each other."</p>
+                </div>
+            </div>
+            
+            <div class="mb-6">
+                <h3 class="text-lg font-medium mb-3">Activity Progress</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 35%"></div>
+                </div>
+                <p class="text-sm text-center">7 of 20 recommended activities completed</p>
+            </div>
+            
+            <div class="mb-6">
+                <h3 class="text-lg font-medium mb-3">Enrolled Activities</h3>
+                <div class="activity-card">
+                    <h4 class="font-medium mb-1">Weekly Appreciation Circle</h4>
+                    <p class="text-sm">Upcoming</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- PROFILE PAGE -->
+        <div class="page" id="profile-page">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold">Profile</h1>
+                <button class="p-2 rounded-full hover:bg-white hover:bg-opacity-10" onclick="goToHomePage()">
+                    <i class="fas fa-home"></i>
+                </button>
+            </div>
+            
+            <div class="flex flex-col items-center mb-6">
+                <img src="https://randomuser.me/api/portraits/lego/1.jpg" alt="Avatar" class="avatar mb-2">
+                <h2 id="profile-display-name" class="text-xl font-semibold mb-1">John Doe</h2>
+                <p id="profile-display-email" class="opacity-70">john@example.com</p>
+                <button class="gradient-btn mt-3" onclick="showEditProfileModal()">Edit Profile</button>
+            </div>
+            
+            <h3 class="text-lg font-medium mb-3">Saved Activities</h3>
+            <div id="saved-activities-container" class="mb-6">
+                <p class="text-center text-sm opacity-70">No saved activities yet. Start exploring and save activities you like!</p>
+            </div>
+            
+            <h3 class="text-lg font-medium mb-3">Partner Information</h3>
+            <div id="partner-container" class="flex flex-col items-center">
+                <p class="text-center mb-3">Not linked with a partner yet.</p>
+                <div id="partner-profile" class="w-full hidden">
+                    <div class="flex items-center justify-center">
+                        <img src="https://randomuser.me/api/portraits/lego/2.jpg" alt="Partner Avatar" class="avatar mr-3">
+                        <div>
+                            <h4 id="partner-display-name" class="text-lg font-medium">Partner Name</h4>
+                            <p id="relationship-duration" class="text-sm opacity-70">Connected for 30 days</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav">
+        <div class="nav-icon" onclick="goToHomePage()">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </div>
+        <div class="nav-icon" onclick="showDashboardPage()">
+            <i class="fas fa-chart-pie"></i>
+            <span>Dashboard</span>
+        </div>
+        <div class="nav-icon" onclick="showProfilePage()">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </div>
+    </div>
+    
+    <!-- Add Chart.js for dashboard charts -->
+    <script>
+    // =======================================================
+    // GLOBAL VARIABLES AND STATE MANAGEMENT
+    // =======================================================
+
+    // Webhook URLs from n8n (replace with your Production URLs)
+    const API_ENDPOINTS = {
+        registration: 'https://viyeji.app.n8n.cloud/webhook/user-registration',
+        login: 'https://viyeji.app.n8n.cloud/webhook/user-login',
+        profileSetup: 'https://viyeji.app.n8n.cloud/webhook/profile-setup',
+        generateCode: 'https://viyeji.app.n8n.cloud/webhook/generate-partner-code',
+        validateCode: 'https://viyeji.app.n8n.cloud/webhook/validate-partner-code',
+        getQuestions: 'https://viyeji.app.n8n.cloud/webhook/get-questions',
+        submitAnswers: 'https://viyeji.app.n8n.cloud/webhook/submit-answers'
+    };
+
+    // Current page and tab tracking
+    let currentPage = 'auth-page';
+    let currentTab = 'login';
+
+    // User and profile information
+    let currentUser = null;
+    let userProfile = null;
+    let partnerInfo = null;
+
+    // Questionnaire tracking
+    let currentQuestion = 0;
+    let totalQuestions = 7;
+    let questionData = [];
+    let userAnswers = [];
+
+    // Activity tracking
+    let activities = [];
+    let savedActivities = [];
+
+    // =======================================================
+    // HELPER FUNCTIONS
+    // =======================================================
+
+    async function makeApiRequest(endpoint, data, method = 'POST') {
+        try {
+            const response = await fetch(endpoint, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            const result = await response.json();
+            if (!response.ok) {
+                throw new Error(result.message || 'API request failed');
+            }
+            return result;
+        } catch (error) {
+            console.error('API Error:', error);
+            alert(`Error: ${error.message || 'Something went wrong. Please try again.'}`);
+            return { success: false, message: error.message || 'Network error' };
+        }
+    }
+
+    // =======================================================
+    // PAGE NAVIGATION FUNCTIONS
+    // =======================================================
+
+    function switchTab(tab) {
+        document.getElementById(currentTab + '-tab').classList.remove('active');
+        document.getElementById(tab + '-tab').classList.add('active');
+        document.getElementById(currentTab + '-form').classList.add('hidden');
+        document.getElementById(tab + '-form').classList.remove('hidden');
+        currentTab = tab;
+    }
+
+    function navigateToPage(pageId) {
+        document.getElementById(currentPage).classList.remove('active');
+        document.getElementById(pageId).classList.add('active');
+        currentPage = pageId;
+        if (pageId === 'questionnaire-page') {
+            loadQuestions();
+        } else if (pageId === 'dashboard-page') {
+            initializeChart();
+        }
+    }
+
+    function goToHomePage() {
+        navigateToPage('home-page');
+    }
+
+    function showDashboardPage() {
+        navigateToPage('dashboard-page');
+    }
+
+    function showProfilePage() {
+        if (currentUser) {
+            document.getElementById('profile-display-name').textContent = currentUser.name;
+            document.getElementById('profile-display-email').textContent = currentUser.email;
+        }
+        if (partnerInfo) {
+            document.getElementById('partner-container').querySelector('p').classList.add('hidden');
+            document.getElementById('partner-profile').classList.remove('hidden');
+            document.getElementById('partner-display-name').textContent = partnerInfo.name;
+            const connectionDate = new Date(partnerInfo.connectedAt);
+            const today = new Date();
+            const diffTime = Math.abs(today - connectionDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            document.getElementById('relationship-duration').textContent = `Connected for ${diffDays} days`;
+        } else {
+            document.getElementById('partner-container').querySelector('p').classList.remove('hidden');
+            document.getElementById('partner-profile').classList.add('hidden');
+        }
+        navigateToPage('profile-page');
+    }
+
+    // =======================================================
+    // AUTH FUNCTIONS
+    // =======================================================
+
+    async function handleLogin() {
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+
+        if (!email || !password) {
+            alert('Please fill in all fields');
+            return;
+        }
+
+        const response = await makeApiRequest(API_ENDPOINTS.login, {
+            email: email,
+            password: password
+        });
+
+        if (response.success) {
+            currentUser = {
+                email: response.userData.email,
+                name: response.userData.fullName,
+                userId: response.userData.email
+            };
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+            if (response.userData.profileComplete) {
+                if (response.userData.partnerId) {
+                    partnerInfo = {
+                        name: response.userData.partnerName || 'Partner',
+                        partnerId: response.userData.partnerId,
+                        connectedAt: new Date()
+                    };
+                    localStorage.setItem('partnerInfo_' + currentUser.userId, JSON.stringify(partnerInfo));
+                    navigateToPage('home-page');
+                } else {
+                    navigateToPage('partner-link-page');
+                }
+            } else {
+                navigateToPage('profile-setup-page');
+            }
+        } else {
+            alert(response.message || 'Invalid email or password');
+        }
+    }
+
+    async function handleSignup() {
+        const name = document.getElementById('signup-name').value;
+        const email = document.getElementById('signup-email').value;
+        const password = document.getElementById('signup-password').value;
+        const confirm = document.getElementById('signup-confirm').value;
+
+        if (!name || !email || !password || !confirm) {
+            alert('Please fill in all fields');
+            return;
+        }
+
+        if (password !== confirm) {
+            alert('Passwords do not match');
+            return;
+        }
+
+        // Prompt user to select userType (husband or wife)
+        const userType = prompt('Are you the husband or wife? Enter "husband" or "wife":');
+        if (!['husband', 'wife'].includes(userType)) {
+            alert('Please enter "husband" or "wife"');
+            return;
+        }
+
+        const response = await makeApiRequest(API_ENDPOINTS.registration, {
+            email: email,
+            fullName: name,
+            password: password,
+            userType: userType
+        });
+
+        if (response.success) {
+            currentUser = {
+                name: name,
+                email: email,
+                userId: response.userId || email
+            };
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            navigateToPage('profile-setup-page');
+        } else {
+            alert(response.message || 'Registration failed');
+        }
+    }
+
+    function logout() {
+        currentUser = null;
+        userProfile = null;
+        partnerInfo = null;
+        localStorage.removeItem('currentUser');
+        document.getElementById('login-email').value = '';
+        document.getElementById('login-password').value = '';
+        document.getElementById('signup-name').value = '';
+        document.getElementById('signup-email').value = '';
+        document.getElementById('signup-password').value = '';
+        document.getElementById('signup-confirm').value = '';
+        navigateToPage('auth-page');
+        switchTab('login');
+    }
+
+    // =======================================================
+    // PROFILE SETUP FUNCTIONS
+    // =======================================================
+
+    function nextProfileQuestion(currentIndex) {
+        const currentQuestion = document.querySelector(`.profile-question[data-index="${currentIndex}"]`);
+        let inputValid = true;
+
+        if (currentIndex === 0) {
+            const nameInput = document.getElementById('profile-name');
+            if (!nameInput.value.trim()) {
+                nameInput.classList.add('border-red-500');
+                inputValid = false;
+            } else {
+                nameInput.classList.remove('border-red-500');
+            }
+        } else {
+            const selectId = currentIndex === 1 ? 'profile-age' :
+                            currentIndex === 2 ? 'profile-personality' :
+                            currentIndex === 3 ? 'profile-travel' :
+                            currentIndex === 4 ? 'profile-decision' : 'profile-leisure';
+            const selectElement = document.getElementById(selectId);
+            if (selectElement.value === '' || selectElement.value === null) {
+                selectElement.classList.add('border-red-500');
+                inputValid = false;
+            } else {
+                selectElement.classList.remove('border-red-500');
+            }
+        }
+
+        if (!inputValid) {
+            alert('Please complete this field before continuing.');
+            return;
+        }
+
+        currentQuestion.classList.add('hidden');
+        currentQuestion.classList.remove('active');
+        const nextQuestion = document.querySelector(`.profile-question[data-index="${currentIndex + 1}"]`);
+        nextQuestion.classList.remove('hidden');
+        nextQuestion.classList.add('active');
+        const progressPercent = ((currentIndex + 1) / 6) * 100;
+        document.querySelector('.progress-fill').style.width = `${progressPercent}%`;
+    }
+
+    function prevProfileQuestion(currentIndex) {
+        const currentQuestion = document.querySelector(`.profile-question[data-index="${currentIndex}"]`);
+        currentQuestion.classList.add('hidden');
+        currentQuestion.classList.remove('active');
+        const prevQuestion = document.querySelector(`.profile-question[data-index="${currentIndex - 1}"]`);
+        prevQuestion.classList.remove('hidden');
+        prevQuestion.classList.add('active');
+        const progressPercent = ((currentIndex - 1) / 6) * 100;
+        document.querySelector('.progress-fill').style.width = `${progressPercent}%`;
+    }
+
+    async function completeProfileSetup() {
+        userProfile = {
+            name: document.getElementById('profile-name').value,
+            age: document.getElementById('profile-age').value,
+            personality: document.getElementById('profile-personality').value,
+            travel: document.getElementById('profile-travel').value,
+            decision: document.getElementById('profile-decision').value,
+            leisure: document.getElementById('profile-leisure').value
+        };
+
+        if (userProfile.name && currentUser) {
+            currentUser.name = userProfile.name;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        }
+
+        const response = await makeApiRequest(API_ENDPOINTS.profileSetup, {
+            email: currentUser.email,
+            name: userProfile.name,
+            age: userProfile.age,
+            personality: userProfile.personality,
+            travel: userProfile.travel,
+            decision: userProfile.decision,
+            leisure: userProfile.leisure
+        });
+
+        if (response.success) {
+            localStorage.setItem('userProfile_' + currentUser.userId, JSON.stringify(userProfile));
+            navigateToPage('partner-link-page');
+        } else {
+            alert(response.message || 'Profile setup failed');
+        }
+    }
+
+    // =======================================================
+    // PARTNER LINKING FUNCTIONS
+    // =======================================================
+
+    async function showGenerateCode() {
+        document.getElementById('generate-code-section').classList.remove('hidden');
+        document.getElementById('enter-code-section').classList.add('hidden');
+        document.getElementById('waiting-partner').classList.remove('hidden');
+        document.getElementById('partner-found').classList.add('hidden');
+
+        const response = await makeApiRequest(API_ENDPOINTS.generateCode, {
+            email: currentUser.email
+        });
+
+        if (response.success) {
+            document.getElementById('connection-code').textContent = response.code;
+            setTimeout(async () => {
+                document.getElementById('waiting-partner').classList.add('hidden');
+                const validateResponse = await makeApiRequest(API_ENDPOINTS.validateCode, {
+                    email: currentUser.email,
+                    code: response.code
+                });
+                if (validateResponse.success) {
+                    document.getElementById('partner-found').classList.remove('hidden');
+                    document.getElementById('partner-name').textContent = validateResponse.partnerName;
+                }
+            }, 5000);
+        } else {
+            alert(response.message || 'Code generation failed');
+        }
+    }
+
+    function showEnterCode() {
+        document.getElementById('enter-code-section').classList.remove('hidden');
+        document.getElementById('generate-code-section').classList.add('hidden');
+        document.getElementById('validation-success').classList.add('hidden');
+        document.getElementById('validation-error').classList.add('hidden');
+        document.querySelectorAll('.digit-input').forEach(input => {
+            input.value = '';
+        });
+        document.querySelector('.digit-input[data-index="0"]').focus();
+
+        document.querySelectorAll('.digit-input').forEach(input => {
+            input.addEventListener('input', function(e) {
+                if (this.value.length > 1) {
+                    this.value = this.value.slice(0, 1);
+                }
+                if (this.value.length === 1) {
+                    const nextIndex = parseInt(this.getAttribute('data-index')) + 1;
+                    if (nextIndex < 6) {
+                        document.querySelector(`.digit-input[data-index="${nextIndex}"]`).focus();
+                    }
+                }
+            });
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Backspace' && this.value.length === 0) {
+                    const prevIndex = parseInt(this.getAttribute('data-index')) - 1;
+                    if (prevIndex >= 0) {
+                        const prevInput = document.querySelector(`.digit-input[data-index="${prevIndex}"]`);
+                        prevInput.focus();
+                        prevInput.value = '';
+                    }
+                }
+            });
+        });
+    }
+
+    async function validateCode() {
+        let code = '';
+        document.querySelectorAll('.digit-input').forEach(input => {
+            code += input.value;
+        });
+
+        if (code.length !== 6) {
+            alert('Please enter a complete 6-digit code');
+            return;
+        }
+
+        document.getElementById('validation-waiting').classList.remove('hidden');
+        const response = await makeApiRequest(API_ENDPOINTS.validateCode, {
+            email: currentUser.email,
+            code: code
+        });
+
+        document.getElementById('validation-waiting').classList.add('hidden');
+        if (response.success) {
+            document.getElementById('validation-success').classList.remove('hidden');
+            document.getElementById('found-partner-name').textContent = response.partnerName;
+        } else {
+            document.getElementById('validation-error').classList.remove('hidden');
+            alert(response.message || 'Invalid or expired code');
+        }
+    }
+
+    async function connectPartner() {
+        partnerInfo = {
+            name: document.getElementById('partner-found').classList.contains('hidden') ?
+                  document.getElementById('found-partner-name').textContent :
+                  document.getElementById('partner-name').textContent,
+            connectedAt: new Date(),
+            partnerId: 'partner_' + Math.random().toString(36).substr(2, 9)
+        };
+        localStorage.setItem('partnerInfo_' + currentUser.userId, JSON.stringify(partnerInfo));
+        navigateToPage('questionnaire-page');
+    }
+
+    // =======================================================
+    // QUESTIONNAIRE FUNCTIONS
+    // =======================================================
+
+    async function loadQuestions() {
+        const response = await makeApiRequest(API_ENDPOINTS.getQuestions, {
+            email: currentUser.email
+        });
+
+        if (response.success) {
+            questionData = response.questions;
+            totalQuestions = questionData.length;
+            displayQuestion(0);
+        } else {
+            alert(response.message || 'Failed to load questions');
+        }
+    }
+
+    function displayQuestion(index) {
+        if (index >= questionData.length) {
+            submitQuestionnaire();
+            return;
+        }
+
+        const question = questionData[index];
+        if (!document.querySelector(`.question-card[data-index="${index}"]`)) {
+            const template = `
+                <div class="question-card hidden" data-index="${index}">
+                    <h3 class="text-lg font-medium mb-2">Question ${index + 1} - ${question.vertical}</h3>
+                    <p class="mb-4" id="question-text-${index}">${question.text}</p>
+                    <div class="options-container">
+                        ${question.options.map((option, optionIndex) => `
+                            <div class="mb-3">
+                                <label class="flex items-start">
+                                    <input type="radio" name="q${index}" value="${option}" class="mt-1 mr-2">
+                                    <span id="option-${index}-${optionIndex}">${option}</span>
+                                </label>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="flex justify-between mt-6">
+                        ${index > 0 ? `<button class="gradient-btn bg-opacity-50" onclick="prevQuestion(${index})">Back</button>` : `<div></div>`}
+                        <button class="gradient-btn" onclick="nextQuestion(${index})">${index === questionData.length - 1 ? 'Submit' : 'Next'}</button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('question-container').insertAdjacentHTML('beforeend', template);
+        }
+
+        document.querySelectorAll('.question-card').forEach(card => {
+            card.classList.add('hidden');
+        });
+        document.querySelector(`.question-card[data-index="${index}"]`).classList.remove('hidden');
+        const progressPercent = (index / questionData.length) * 100;
+        document.getElementById('questionnaire-progress').style.width = `${progressPercent}%`;
+        currentQuestion = index;
+    }
+
+    function nextQuestion(index) {
+        const selectedOption = document.querySelector(`input[name="q${index}"]:checked`);
+        if (!selectedOption) {
+            alert('Please select an option before continuing');
+            return;
+        }
+
+        userAnswers[index] = {
+            vertical: questionData[index].vertical,
+            text: questionData[index].text,
+            options: questionData[index].options,
+            selected: selectedOption.value
+        };
+        displayQuestion(index + 1);
+    }
+
+    function prevQuestion(index) {
+        displayQuestion(index - 1);
+    }
+
+    async function submitQuestionnaire() {
+        const response = await makeApiRequest(API_ENDPOINTS.submitAnswers, {
+            email: currentUser.email,
+            answers: userAnswers
+        });
+
+        if (response.success) {
+            localStorage.setItem('questionnaireAnswers_' + currentUser.userId, JSON.stringify(userAnswers));
+            navigateToPage('completion-page');
+        } else {
+            alert(response.message || 'Failed to submit answers');
+        }
+    }
+
+    // =======================================================
+    // ACTIVITY FUNCTIONS
+    // =======================================================
+
+    function likeActivity(activityId) {
+        console.log('Liked activity:', activityId);
+    }
+
+    function dislikeActivity(activityId) {
+        console.log('Disliked activity:', activityId);
+    }
+
+    function saveActivity(activityId) {
+        console.log('Saved activity:', activityId);
+        const button = event.currentTarget;
+        button.classList.add('text-white');
+        setTimeout(() => {
+            button.classList.remove('text-white');
+        }, 500);
+        if (!savedActivities.includes(activityId)) {
+            savedActivities.push(activityId);
+            localStorage.setItem('savedActivities_' + currentUser.userId, JSON.stringify(savedActivities));
+        }
+    }
+
+    // =======================================================
+    // DASHBOARD FUNCTIONS
+    // =======================================================
+
+    function initializeChart() {
+        const ctx = document.getElementById('relationshipChart');
+        if (window.relationshipChart) {
+            window.relationshipChart.destroy();
+        }
+        const chartData = {
+            labels: [
+                'Communication',
+                'Emotional Intimacy',
+                'Physical Intimacy',
+                'Trust & Security',
+                'Shared Responsibilities',
+                'Values & Goals',
+                'Respect & Admiration'
+            ],
+            datasets: [{
+                label: 'Relationship Score',
+                data: [80, 65, 75, 90, 60, 85, 70],
+                fill: true,
+                backgroundColor: 'rgba(129, 140, 248, 0.2)',
+                borderColor: 'rgba(129, 140, 248, 1)',
+                pointBackgroundColor: 'rgba(129, 140, 248, 1)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgba(129, 140, 248, 1)'
+            }]
+        };
+        window.relationshipChart = new Chart(ctx, {
+            type: 'radar',
+            data: chartData,
+            options: {
+                scales: {
+                    r: {
+                        angleLines: { color: 'rgba(255, 255, 255, 0.2)' },
+                        grid: { color: 'rgba(255, 255, 255, 0.2)' },
+                        pointLabels: { color: 'rgba(255, 255, 255, 0.7)', font: { size: 10 } },
+                        ticks: { color: 'rgba(255, 255, 255, 0.7)', backdropColor: 'transparent' }
+                    }
+                },
+                plugins: { legend: { display: false } },
+                maintainAspectRatio: true,
+                elements: { line: { borderWidth: 2 } }
+            }
+        });
+    }
+
+    // =======================================================
+    // INITIALIZATION
+    // =======================================================
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const savedUser = localStorage.getItem('currentUser');
+        if (savedUser) {
+            currentUser = JSON.parse(savedUser);
+            const savedProfile = localStorage.getItem('userProfile_' + currentUser.userId);
+            if (savedProfile) {
+                userProfile = JSON.parse(savedProfile);
+                const savedPartner = localStorage.getItem('partnerInfo_' + currentUser.userId);
+                if (savedPartner) {
+                    partnerInfo = JSON.parse(savedPartner);
+                    navigateToPage('home-page');
+                } else {
+                    navigateToPage('partner-link-page');
+                }
+            } else {
+                navigateToPage('profile-setup-page');
+            }
+        }
+
+        if (currentUser) {
+            const saved = localStorage.getItem('savedActivities_' + currentUser.userId);
+            if (saved) {
+                savedActivities = JSON.parse(saved);
+            }
+        }
+
+        document.querySelectorAll('.digit-input').forEach(input => {
+            input.addEventListener('input', function(e) {
+                if (this.value.length > 1) {
+                    this.value = this.value.slice(0, 1);
+                }
+                if (this.value.length === 1) {
+                    const nextIndex = parseInt(this.getAttribute('data-index')) + 1;
+                    if (nextIndex < 6) {
+                        document.querySelector(`.digit-input[data-index="${nextIndex}"]`).focus();
+                    }
+                }
+            });
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Backspace' && this.value.length === 0) {
+                    const prevIndex = parseInt(this.getAttribute('data-index')) - 1;
+                    if (prevIndex >= 0) {
+                        const prevInput = document.querySelector(`.digit-input[data-index="${prevIndex}"]`);
+                        prevInput.focus();
+                        prevInput.value = '';
+                    }
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
