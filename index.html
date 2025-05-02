@@ -804,9 +804,13 @@
             return;
         }
 
-        const response = await makeApiRequest(API_ENDPOINTS.login, {
+        const response = await makeApiRequest('/api/trigger-n8n', {
+            {
+        webhookType: 'login',  // Pass the appropriate webhook type
+        data: {
             email: email,
             password: password
+        }
         });
 
         if (response.success) {
@@ -968,7 +972,9 @@
             localStorage.setItem('currentUser', JSON.stringify(currentUser));
         }
 
-        const response = await makeApiRequest(API_ENDPOINTS.profileSetup, {
+        const response = await makeApiRequest('/api/trigger-n8n', {
+        webhookType: 'profileSetup',  // Pass the appropriate webhook type
+        data: {
             email: currentUser.email,
             name: userProfile.name,
             age: userProfile.age,
@@ -976,6 +982,7 @@
             travel: userProfile.travel,
             decision: userProfile.decision,
             leisure: userProfile.leisure
+        }
         });
 
         if (response.success) {
@@ -996,8 +1003,11 @@
         document.getElementById('waiting-partner').classList.remove('hidden');
         document.getElementById('partner-found').classList.add('hidden');
 
-        const response = await makeApiRequest(API_ENDPOINTS.generateCode, {
+        const response = await makeApiRequest('/api/trigger-n8n', {
+        webhookType: 'generateCode',  // Pass the appropriate webhook type
+        data: {
             email: currentUser.email
+        }
         });
 
         if (response.success) {
@@ -1065,9 +1075,12 @@
         }
 
         document.getElementById('validation-waiting').classList.remove('hidden');
-        const response = await makeApiRequest(API_ENDPOINTS.validateCode, {
+        const response = await makeApiRequest('/api/trigger-n8n', {
+        webhookType: 'validateCode',  // Pass the appropriate webhook type
+        data: {
             email: currentUser.email,
             code: code
+        }
         });
 
         document.getElementById('validation-waiting').classList.add('hidden');
@@ -1097,8 +1110,11 @@
     // =======================================================
 
     async function loadQuestions() {
-        const response = await makeApiRequest(API_ENDPOINTS.getQuestions, {
+        const response = await makeApiRequest('/api/trigger-n8n', {
+        webhookType: 'getQuestions',  // Pass the appropriate webhook type
+        data: {
             email: currentUser.email
+        }
         });
 
         if (response.success) {
@@ -1171,7 +1187,9 @@
     }
 
     async function submitQuestionnaire() {
-        const response = await makeApiRequest(API_ENDPOINTS.submitAnswers, {
+        const response = await makeApiRequest('/api/trigger-n8n', {
+        webhookType: 'submitAnswers',  // Pass the appropriate webhook type
+        data: {
             email: currentUser.email,
             answers: userAnswers
         });
