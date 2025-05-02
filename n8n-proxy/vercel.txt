@@ -1,0 +1,4 @@
+{
+  "version": 2,
+  "builds": [{ "src": "api/trigger-n8n.js", "use": "@vercel/node" }]
+}
