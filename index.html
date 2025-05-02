@@ -860,11 +860,14 @@
             return;
         }
 
-        const response = await makeApiRequest(API_ENDPOINTS.registration, {
+        const response = await makeApiRequest('/api/trigger-n8n', {
+        webhookType: 'registration',  // Pass the appropriate webhook type
+        data: {
             email: email,
             fullName: name,
             password: password,
             userType: userType
+        }
         });
 
         if (response.success) {
