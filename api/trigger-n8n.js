@@ -21,13 +21,13 @@ export default async function handler(req, res) {
 
   // Map of valid webhook endpoints
   const API_ENDPOINTS = {
-    registration: 'https://viyeji.app.n8n.cloud/webhook-test/user-registration',
-    login: 'https://viyeji.app.n8n.cloud/webhook-test/user-login',
-    profileSetup: 'https://viyeji.app.n8n.cloud/webhook-test/profile-setup',
-    generateCode: 'https://viyeji.app.n8n.cloud/webhook-test/generate-partner-code',
-    validateCode: 'https://viyeji.app.n8n.cloud/webhook-test/validate-partner-code',
-    getQuestions: 'https://viyeji.app.n8n.cloud/webhook-test/get-questions',
-    submitAnswers: 'https://viyeji.app.n8n.cloud/webhook-test/submit-answers',
+    registration: 'https://viyeji.app.n8n.cloud/webhook/user-registration',
+    login: 'https://viyeji.app.n8n.cloud/webhook/user-login',
+    profileSetup: 'https://viyeji.app.n8n.cloud/webhook/profile-setup',
+    generateCode: 'https://viyeji.app.n8n.cloud/webhook/generate-partner-code',
+    validateCode: 'https://viyeji.app.n8n.cloud/webhook/validate-partner-code',
+    getQuestions: 'https://viyeji.app.n8n.cloud/webhook/get-questions',
+    submitAnswers: 'https://viyeji.app.n8n.cloud/webhook/submit-answers',
   };
 
   // Check if the provided webhookType is valid
